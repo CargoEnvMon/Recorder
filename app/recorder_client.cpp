@@ -9,18 +9,20 @@ void send_data() {
     const auto items = get_measurements(&length);
 
     if (length <= 0) {
+        Serial.println("No items");
         return;
     }
     
     WiFiClient client;
     if (!client.connect(RECORDER_IP, RECORDER_PORT)) {
+        Serial.println("No connection");
         return;
     }
     String header = CARGO_ID"|1648410051380|3";
     client.println(header);
 
     for (int index = 0; index < length; ++index) {
-        const auto item = items[0];
+        const auto item = items[index];
         String line = "";
         line.concat(item.timeShift);
         line.concat("|");
@@ -32,4 +34,9 @@ void send_data() {
     }
     
     client.print("<EOF>");
+
+    client.flush();
+    client.stop();
+    
+    Serial.println("End");
 }

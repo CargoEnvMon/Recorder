@@ -5,6 +5,7 @@
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
 #include <WiFiType.h>
+#include <Arduino.h>
 
 bool try_connect();
 
@@ -13,6 +14,7 @@ void wifi_loop() {
 
     while (1) {
         if (try_connect()) {
+            Serial.println("Connected");
             send_data();
             WiFi.disconnect();
         }
@@ -27,6 +29,7 @@ bool try_connect() {
     int attempts = 0;
     WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
     while (WiFi.status() != WL_CONNECTED) {
+        Serial.println("Trying to connect");
         if (attempts > 5) {
             WiFi.disconnect();
             return false;
@@ -35,5 +38,5 @@ bool try_connect() {
         attempts++;
     }
 
-    return WiFi.status() != WL_CONNECTED;
+    return WiFi.status() == WL_CONNECTED;
 }
