@@ -1,11 +1,10 @@
 #include "wifilistener.h"
 #include "recorder_client.h"
+#include "cem_globals.h"
 #include <WiFi.h>
-#include <WiFiType.h>
+#include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
-
-const char *ssid = "cem_recorder";
-const char *password = "123456";
+#include <WiFiType.h>
 
 bool try_connect();
 
@@ -26,7 +25,7 @@ void wifi_loop() {
 
 bool try_connect() {
     int attempts = 0;
-    WiFi.begin(ssid, password);
+    WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
     while (WiFi.status() != WL_CONNECTED) {
         if (attempts > 5) {
             WiFi.disconnect();

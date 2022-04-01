@@ -5,13 +5,15 @@
 #endif
 
 #include <freertos/FreeRTOS.h>
-#include <freertos/task.h>
-#include "cargo_env_mon.h"
 #include "wifilistener.h"
+#include "cargo_env_mon.h"
+#include <freertos/task.h>
 
 void cargo_env_mon_setup() {
     xTaskCreatePinnedToCore(
-            wifi_loop,
+            [](void *) {
+                wifi_loop();
+            },
             "WiFiLoop",
             1024 * 3,
             NULL,
