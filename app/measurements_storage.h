@@ -4,7 +4,7 @@
 struct measurement {
     float temperature;
     float humidity;
-    int timeShift;
+    unsigned char timeShift;
 };
 
 typedef struct measurement Measurement ;

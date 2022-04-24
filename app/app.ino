@@ -2,7 +2,8 @@
 
 void setup()
 {
-    Serial.begin(115200);
+    Serial.begin(9600);
+    delay(5000);
     cargo_env_mon_setup();
 }
 

@@ -1,15 +1,30 @@
 #include "measurements_storage.h"
-#include "cem_globals.h"
+#include <EEPROM.h>
 
-Measurement measurements[MAX_MEASUREMENTS] = {};
-int index = 0;
+const size_t size = sizeof (Measurement);
 
-void save_measurement(Measurement measurement) {
-    measurements[index] = measurement;
-    index++;
+unsigned char get_length() {
+    return EEPROM.readUChar(0);
 }
 
-Measurement* get_measurements(int* length) {
-    *length = index;
+void save_measurement(Measurement measurement) {
+    auto length = get_length();
+    length = length == 0 ? 1 : length;
+    EEPROM.writeBytes(length, &measurement, size);
+    length += size;
+    EEPROM.writeUChar(0, length);
+    EEPROM.commit();
+    delay(100);
+}
+
+Measurement *get_measurements(int *length) {
+    *length = get_length() / size;
+    auto measurements = new Measurement[*length];
+    int mem_address = 1;
+    for (int index = 0; index < *length; index++) {
+        EEPROM.readBytes(mem_address, &measurements[index], size);
+        mem_address += size; 
+    }
+    
     return measurements;
 }
